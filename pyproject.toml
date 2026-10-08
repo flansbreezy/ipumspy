@@ -1,79 +1,69 @@
-[tool.poetry]
+[project]
 name = "ipumspy"
 version = "0.8.2"
 description = "A collection of tools for working with IPUMS data"
-authors = ["Kevin H. Wilson <kevin_wilson@brown.edu>",
-           "Renae Rodgers <rodge103@umn.edu>"]
-license = "Mozilla Public License 2.0 (MPL 2.0)"
-packages = [
-    { include = "ipumspy", from = "src" }
+readme = "README.md"
+authors = [
+    { name = "Kevin H. Wilson", email = "kevin_wilson@brown.edu" },
+    { name = "Renae Rodgers", email = "rodge103@umn.edu" },
+]
+license = "MPL-2.0"
+license-files = ["LICENSE", "NOTICE.txt"]
+requires-python = ">=3.10"
+dependencies = [
+    "pandas>=2.2.3",
+    "numpy>=2.0.0",
+    "click>=8.1.0",
+    "pyarrow>=23.0.0",
+    "requests>=2.32.5",
+    "PyYAML>=6.0.1",
 ]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-pandas = "^2.2.3"
-numpy = "^2.0.0"
-click = "^8.0.0"
-pyarrow = "^23.0.0"
-requests = {extras = ["use_chardet_on_py3"], version = "^2.32.5"}
-importlib-metadata = "^4.13.0"
-PyYAML = "^6.0.1"
+[project.urls]
+Homepage = "https://github.com/ipums/ipumspy"
+Documentation = "https://ipumspy.readthedocs.io"
 
-[tool.poetry.group.dev.dependencies]
-black = "^24.4.0"
-pylint = "^2.7.4"
-isort = "^5.8.0"
-mypy = "^1.0.1"
-
-[tool.poetry.group.test.dependencies]
-pytest = "^9.0.0"
-pytest-cov = "^4.0.0"
-python-dotenv = "^1.0.0"
-fastapi = "^0.128.1"
-uvicorn = {extras = ["standard"], version = "^0.40.0"}
-pytest-recording = "^0.13.4"
-vcrpy = "^8.0.0"
-
-[tool.poetry.group.docs]
-optional=true
-
-[tool.poetry.group.docs.dependencies]
-beautifulsoup4 = "^4.12.3"
-Sphinx = "^6.1.3"
-sphinx-autodoc-typehints = "^1.22.0"
-sphinx-copybutton = "^0.5.0"
-myst-parser = "^0.19.1"
-furo = "^2022.12.7"
-
-[tool.poetry.extras]
-docs = [
-    "beautifulsoup4",
-    "Sphinx",
-    "sphinx-autodoc-typehints",
-    "sphinx-copybutton",
-    "myst-parser",
-    "furo",
-]
-
-[tool.poetry.scripts]
+[project.scripts]
 ipums = "ipumspy.cli:cli"
 
-[tool.isort]
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-ensure_newline_before_comments = true
-line_length = 88
+[dependency-groups]
+dev = [
+    "ruff>=0.16.10",
+    "mypy>=2.4.0",
+]
+test = [
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "python-dotenv>=1.2.4",
+    "fastapi>=0.143.0",
+    "uvicorn[standard]>=0.54.0",
+    "pytest-recording>=0.14.0",
+    "vcrpy>=8.3.0",
+]
+docs = [
+    "beautifulsoup4>=4.15.0",
+    "sphinx>=9.1.0",
+    "sphinx-autodoc-typehints>=3.13.9",
+    "sphinx-copybutton>=0.5.2",
+    "myst-parser>=5.1.0",
+    "furo>=2025.12.19",
+]
 
-[tool.pylint.basic]
-good-names = "i,j,k,ex,Run,_,df,pc"
+[tool.uv]
+default-groups = ["dev", "test"]
 
-[tool.pylint.messages_control]
-disable = "C0330, C0326, R0912, R0913, R0914, R0915"
+[tool.uv.dependency-groups]
+docs = { requires-python = ">=3.12" }
 
-[tool.pylint.format]
-max-line-length = "88"
+[build-system]
+requires = ["uv_build>=0.12.0,<0.13"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
 
 [tool.pytest.ini_options]
 markers = [ "slow: Run with --runslow",
@@ -83,7 +73,3 @@ markers = [ "slow: Run with --runslow",
 omit = [
     "*/tests/*",
 ]
-
-[build-system]
-requires = ["poetry>=1.4"]
-build-backend = "poetry.masonry.api"

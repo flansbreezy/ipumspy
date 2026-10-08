@@ -10,6 +10,12 @@ This project adheres to `Semantic Versioning`_.
 
 .. _Semantic Versioning: http://semver.org/
 
+Unreleased
+----------
+
+* Packaging
+
+  * Migrated from Poetry to ``uv`` (PEP 621 metadata, PEP 735 dependency groups, ``uv_build`` backend).
 
 0.8.2
 -----
