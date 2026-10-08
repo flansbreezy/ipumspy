@@ -14,7 +14,6 @@ import pytest
 from click.testing import CliRunner
 
 from ipumspy import cli
-from ipumspy.api import IpumsApiClient
 
 
 @pytest.fixture(scope="module")

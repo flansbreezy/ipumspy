@@ -2,9 +2,9 @@
 Classes for requesting IPUMS metadata via the IPUMS API
 """
 
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
-from abc import ABC, abstractmethod
 
 
 @dataclass

@@ -1,6 +1,6 @@
 from pathlib import Path
+
 import pytest
-import vcr
 
 from ipumspy import noextract
 
@@ -50,6 +50,6 @@ def test_download_notproj(tmpdir: Path):
     with pytest.raises(ValueError) as e:
         noextract.download_noextract_data("notproj", tmpdir / "notproj_test.dat.gz")
     assert e.value.args[0] == (
-        f"notproj is not a non-extractable IPUMS data collection. "
-        f"Non-extractable IPUMS data collections include yrbss nyts"
+        "notproj is not a non-extractable IPUMS data collection. "
+        "Non-extractable IPUMS data collections include yrbss nyts"
     )

@@ -6,19 +6,17 @@
 """
 Functions for reading and processing IPUMS data
 """
+
 import copy
 import json
 import re
 import warnings
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from typing import Iterator, List, Optional, Union, Dict
+from typing import Dict, Iterator, List, Optional, Union
 
 import pandas as pd
-import numpy as np
 import yaml
-
-from ipumspy import noextract
 
 from . import ddi as ddi_definitions
 from . import fileutils
@@ -42,7 +40,7 @@ def _fix_float_dtypes(dtype, df):
             try:
                 df[col] = df[col].astype(pd.Int64Dtype())
             # except (TypeError, ValueError) as e:
-            except (TypeError, ValueError) as e:
+            except (TypeError, ValueError):
                 # if a variable is hitting this exception,
                 # it is a float in the actual data that is designated as
                 # an integer due to the 'numeric' typing of all non-character
