@@ -8,10 +8,9 @@ import warnings
 from functools import wraps
 from http import HTTPStatus
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union, Generator
+from typing import Any, Dict, Generator, List, Optional, Tuple, Union
 
 import requests
-from requests.models import Response
 
 from ..__version__ import __version__
 from ..types import FilenameType
@@ -19,18 +18,18 @@ from .exceptions import (
     BadIpumsApiRequest,
     IpumsAPIAuthenticationError,
     IpumsApiException,
+    IpumsApiRateLimitException,
     IpumsExtractFailure,
     IpumsExtractNotReady,
     IpumsNotFound,
     IpumsTimeoutException,
     TransientIpumsApiException,
-    IpumsApiRateLimitException,
 )
 from .extract import (
     BaseExtract,
+    _camel_to_snake,
     _get_collection_type,
     extract_from_dict,
-    _camel_to_snake,
 )
 from .metadata import IpumsMetadata
 
@@ -123,7 +122,7 @@ class IpumsApiClient:
             response = self.session.request(method, *args, **kwargs)
             response.raise_for_status()
             return response
-        except requests.exceptions.HTTPError as http_err:
+        except requests.exceptions.HTTPError:
             if response.status_code == HTTPStatus.BAD_REQUEST:
                 error_details = _prettify_message(response.json()["detail"])
                 raise BadIpumsApiRequest(error_details)

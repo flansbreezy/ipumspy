@@ -1,8 +1,8 @@
 import gzip
 import importlib.resources as pkg_resources
+from typing import Optional
 
 import requests
-from typing import Optional
 import yaml
 
 from ipumspy.types import FilenameType
@@ -107,7 +107,6 @@ def download_noextract_data(collection: str, filename: Optional[FilenameType] = 
         f"https://assets.ipums.org/_files/fda/{collection}/ipums-{collection}.dat.gz",
         stream=True,
     ) as resp:
-
         resp.raise_for_status()
         with open(filename, "wb") as outfile:
             for chunk in resp.iter_content(chunk_size=8192):

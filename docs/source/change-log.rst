@@ -16,6 +16,11 @@ Unreleased
 * Packaging
 
   * Migrated from Poetry to ``uv`` (PEP 621 metadata, PEP 735 dependency groups, ``uv_build`` backend).
+  * Removed upper version caps on runtime dependencies; ``pandas`` 3.x is now allowed.
+  * Dropped the unused ``importlib-metadata`` dependency and the ``chardet`` extra on ``requests``.
+  * Removed the ``docs`` install extra; docs dependencies now live in the ``docs`` dependency group.
+  * Replaced ``black``/``isort``/``pylint`` with ``ruff``.
+
 
 0.8.2
 -----

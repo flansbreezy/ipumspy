@@ -6,7 +6,6 @@
 """
 Functions for accessing IPUMS data and metadata
 """
-from typing import Dict
 
 import pandas as pd
 

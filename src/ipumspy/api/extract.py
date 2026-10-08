@@ -4,17 +4,12 @@ Wrappers for payloads to ship to the IPUMS API
 
 from __future__ import annotations
 
+import json
 import warnings
+from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Type, Union
 
-import requests
-import json
-import inspect
-from abc import ABC, abstractmethod
-
-from ipumspy.ddi import Codebook
-
-from dataclasses import dataclass, field
 from .exceptions import IpumsExtractNotSubmitted
 
 
@@ -28,7 +23,6 @@ class ModifiedExtractWarning(Warning):
 
 @dataclass
 class IpumsObject(ABC):
-
     def update(self, attribute: str, value: Any):
         """
         Update Variable features
@@ -373,7 +367,7 @@ def _camel_to_snake(key):
     if isinstance(key, bool):
         return key
     cap_idx = [0] + [
-        key.index(l, i) for i, l in enumerate(key) if l.isupper() and i != 0
+        key.index(ch, i) for i, ch in enumerate(key) if ch.isupper() and i != 0
     ]
     parts_list = [key[i:j].lower() for i, j in zip(cap_idx, cap_idx[1:] + [None])]
     snake = "_".join(parts_list)
@@ -511,7 +505,7 @@ class BaseExtract:
                     # Because Variable objects can have the same name but differet feature specifications
                     # force the user to fix this themselves
                     raise ValueError(
-                        f"Duplicate Variable objects are not allowed in IPUMS Extract definitions."
+                        "Duplicate Variable objects are not allowed in IPUMS Extract definitions."
                     )
                 else:
                     # return the list of objects
@@ -521,7 +515,7 @@ class BaseExtract:
                     # Because Sample objects can have the same id but differet feature specifications
                     # force the user to fix this themselves
                     raise ValueError(
-                        f"Duplicate Sample objects are not allowed in IPUMS Extract definitions."
+                        "Duplicate Sample objects are not allowed in IPUMS Extract definitions."
                     )
                 else:
                     # return the list of objects
@@ -559,7 +553,7 @@ class BaseExtract:
             except KeyError:
                 # no longer supporting beta extract schema
                 raise NotImplementedError(
-                    f"The IPUMS API version specified in the extract definition is not supported by this version of ipumspy."
+                    "The IPUMS API version specified in the extract definition is not supported by this version of ipumspy."
                 )
         # if no api_version is specified, use default IpumsApiClient version
         else:

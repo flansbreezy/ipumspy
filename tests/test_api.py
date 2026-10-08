@@ -1,40 +1,34 @@
 import os
 import pickle
 import subprocess
-import time
-import yaml
-import json
-import pickle
 import tempfile
-import warnings
+import time
 from pathlib import Path
 
 import pytest
-import vcr
+import yaml
 
-from ipumspy import api, readers
 from ipumspy.api import (
+    AggregateDataExtract,
+    IhgisDataset,
     IpumsApiClient,
     MicrodataExtract,
-    AggregateDataExtract,
+    NhgisDataset,
+    Sample,
+    Shapefile,
+    TimeSeriesTable,
+    TimeUseVariable,
+    Variable,
+    define_extract_from_json,
     extract_from_dict,
     extract_to_dict,
-    define_extract_from_json,
     save_extract_as_json,
-    Variable,
-    Sample,
-    TimeUseVariable,
-    NhgisDataset,
-    IhgisDataset,
-    TimeSeriesTable,
-    Shapefile,
 )
 from ipumspy.api.exceptions import (
     BadIpumsApiRequest,
-    IpumsApiException,
+    IpumsExtractNotReady,
     IpumsExtractNotSubmitted,
     IpumsNotFound,
-    IpumsExtractNotReady,
 )
 
 
@@ -907,7 +901,7 @@ def test_not_submitted_exception():
         ["AGE", "SEX"],
     )
     with pytest.raises(IpumsExtractNotSubmitted) as exc_info:
-        dct = extract_to_dict(extract)
+        extract_to_dict(extract)
     assert exc_info.value.args[0] == (
         "Extract has not been submitted and so has no json response"
     )
@@ -919,7 +913,7 @@ def test_extract_is_expired(live_api_client: IpumsApiClient):
     Ensure expired status is correctly returned
     """
     is_expired = live_api_client.extract_is_expired(extract="1", collection="usa")
-    assert is_expired == True
+    assert is_expired is True
 
 
 def test_extract_from_dict(fixtures_path: Path):
@@ -1455,7 +1449,7 @@ def test_validate_list_args():
     )
 
     with pytest.raises(ValueError) as exc_info:
-        vars_extract = MicrodataExtract(
+        MicrodataExtract(
             "ipumsi",
             ["ar2011a"],
             [
@@ -1477,7 +1471,7 @@ def test_validate_list_args():
     assert str_extract.samples == ([Sample(id="cps2012_03s"), Sample(id="cps2013_03s")])
 
     with pytest.raises(ValueError) as exc_info:
-        samples_extract = MicrodataExtract(
+        MicrodataExtract(
             "cps",
             [
                 Sample(id="cps2012_03s"),
@@ -1493,7 +1487,7 @@ def test_validate_list_args():
 
     # make sure duplicate objects raise an error
     with pytest.raises(ValueError) as exc_info:
-        obj_extract = MicrodataExtract(
+        MicrodataExtract(
             "cps",
             [
                 Sample(id="cps2012_03s"),
@@ -1510,7 +1504,7 @@ def test_validate_list_args():
     )
 
     with pytest.raises(TypeError) as exc_info:
-        mixed_extract = MicrodataExtract(
+        MicrodataExtract(
             "cps",
             [
                 Sample(id="cps2012_03s"),
@@ -1699,7 +1693,7 @@ def test_get_extract_by_id(live_api_client: IpumsApiClient):
 
     # extract with warnings
     with pytest.warns(Warning) as record:
-        ext = live_api_client.get_extract_by_id(95, "cps")
+        live_api_client.get_extract_by_id(95, "cps")
         if not record:
             pytest.fail("Expected ModifiedIpumsExtract warning.")
 

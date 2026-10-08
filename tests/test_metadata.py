@@ -1,17 +1,14 @@
 import os
+
 import pytest
 
 from ipumspy.api import IpumsApiClient
-
+from ipumspy.api.exceptions import IpumsApiRateLimitException
 from ipumspy.api.metadata import (
     NhgisDatasetMetadata,
     NhgisDataTableMetadata,
-    IhgisDatasetMetadata,
-    IhgisDataTableMetadata,
     TimeSeriesTableMetadata,
 )
-
-from ipumspy.api.exceptions import IpumsApiRateLimitException
 
 
 @pytest.fixture(scope="function")
@@ -96,7 +93,7 @@ def test_get_ihgis_metadata(live_api_client: IpumsApiClient):
 
 def test_collection_validity():
     with pytest.raises(ValueError) as exc_info:
-        ds = TimeSeriesTableMetadata("usa", "CW3")
+        TimeSeriesTableMetadata("usa", "CW3")
     assert (
         exc_info.value.args[0]
         == "TimeSeriesTableMetadata is not a valid metadata type for the usa collection."
